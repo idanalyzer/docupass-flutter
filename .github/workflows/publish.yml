@@ -1,0 +1,36 @@
+name: Publish to pub.dev
+
+# Publishes docupass_flutter to pub.dev when a version tag (v*) is pushed, using
+# pub.dev's GitHub Actions OIDC automated publishing (no stored token).
+#
+# ONE-TIME SETUP ON pub.dev (required before the first tag works):
+#   1. Sign in to pub.dev with the Google account that should own the package.
+#   2. Reserve/own the package, then on its Admin tab enable
+#      "Automated publishing" -> "Publishing from GitHub Actions", set
+#      Repository = idanalyzer/docupass-flutter and Tag pattern = v{{version}}.
+#   (pub.dev may require an initial manual `dart pub publish` to create the
+#    package before the admin page exists; after that, tags publish automatically.)
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # required for pub.dev OIDC
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install deps
+        run: flutter pub get
+
+      - name: Publish
+        run: flutter pub publish --force
