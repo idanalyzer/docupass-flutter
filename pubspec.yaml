@@ -1,0 +1,25 @@
+name: docupass_flutter
+description: Native in-app ID verification & KYC for Flutter (ID Analyzer DocuPass) — document scan, face match, on-device liveness, no WebView.
+version: 0.1.0
+homepage: https://github.com/idanalyzer/docupass-flutter
+repository: https://github.com/idanalyzer/docupass-flutter
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+  flutter: ">=3.19.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_lints: ^4.0.0
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.idanalyzer.docupass.flutter
+        pluginClass: DocupassFlutterPlugin
+      ios:
+        pluginClass: DocupassFlutterPlugin
