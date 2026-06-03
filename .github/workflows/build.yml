@@ -1,0 +1,26 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    # The Dart surface is analyzed here. The native halves (Android Kotlin / iOS
+    # Swift) build against the published native cores (com.idanalyzer:docupass AAR
+    # / DocuPass pod) — wire a full native build once those are published.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install deps
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
