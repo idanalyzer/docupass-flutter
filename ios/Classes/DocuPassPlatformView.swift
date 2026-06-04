@@ -40,7 +40,12 @@ class DocuPassPlatformViewImpl: NSObject, FlutterPlatformView {
             partyId: params["partyId"] as? String,
             baseURLOverride: params["baseUrl"] as? String
         )
-        let root = DocuPassView(config: config) { [weak self] result in self?.emit(result) }
+        let theme = DocuPassTheme(
+            primaryColor: (params["brandColor"] as? String).flatMap { Color(hex: $0) },
+            logoURL: (params["logoUrl"] as? String).flatMap { $0.isEmpty ? nil : $0 }
+        )
+        let strings = DocuPassStrings().applying((params["labels"] as? [String: String]) ?? [:])
+        let root = DocuPassView(config: config, strings: strings, theme: theme) { [weak self] result in self?.emit(result) }
         let hc = UIHostingController(rootView: AnyView(root))
         hosting = hc
         hc.view.frame = container.bounds

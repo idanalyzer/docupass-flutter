@@ -28,6 +28,17 @@ class DocuPassView extends StatefulWidget {
   /// Optional base URL override (on-prem ID Fort).
   final String? baseUrl;
 
+  /// Brand color for buttons/controls, hex (e.g. "#1565C0").
+  final String? brandColor;
+
+  /// Logo shown on the welcome screen (overrides the server logo).
+  final String? logoUrl;
+
+  /// Override any UI label — keys are the DocuPassStrings property names
+  /// (e.g. `{'phoneTitle': 'Vérifiez votre téléphone'}`). Re-word or localize
+  /// the flow to any language.
+  final Map<String, String>? labels;
+
   /// Terminal callback.
   final void Function(DocuPassResult result)? onResult;
 
@@ -36,6 +47,9 @@ class DocuPassView extends StatefulWidget {
     required this.reference,
     this.partyId,
     this.baseUrl,
+    this.brandColor,
+    this.logoUrl,
+    this.labels,
     this.onResult,
   });
 
@@ -50,6 +64,9 @@ class _DocuPassViewState extends State<DocuPassView> {
         'reference': widget.reference,
         if (widget.partyId != null) 'partyId': widget.partyId,
         if (widget.baseUrl != null) 'baseUrl': widget.baseUrl,
+        if (widget.brandColor != null) 'brandColor': widget.brandColor,
+        if (widget.logoUrl != null) 'logoUrl': widget.logoUrl,
+        if (widget.labels != null) 'labels': widget.labels,
       };
 
   void _onPlatformViewCreated(int id) {

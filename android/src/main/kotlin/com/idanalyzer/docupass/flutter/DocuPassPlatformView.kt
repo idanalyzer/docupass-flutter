@@ -2,6 +2,7 @@ package com.idanalyzer.docupass.flutter
 
 import android.content.Context
 import android.view.View
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -16,7 +17,10 @@ import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.idanalyzer.docupass.DocuPassConfig
 import com.idanalyzer.docupass.DocuPassResult
+import com.idanalyzer.docupass.ui.DocuPassStrings
+import com.idanalyzer.docupass.ui.DocuPassTheme
 import com.idanalyzer.docupass.ui.DocuPassView
+import com.idanalyzer.docupass.ui.withOverrides
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.StandardMessageCodec
@@ -68,8 +72,18 @@ class DocuPassPlatformView(
                 partyId = params["partyId"] as? String,
                 baseUrlOverride = params["baseUrl"] as? String,
             )
+            val theme = DocuPassTheme(
+                primaryColor = (params["brandColor"] as? String)?.takeIf { it.isNotBlank() }
+                    ?.let { runCatching { Color(android.graphics.Color.parseColor(it)) }.getOrNull() },
+                logoUrl = (params["logoUrl"] as? String)?.takeIf { it.isNotBlank() },
+            )
+            @Suppress("UNCHECKED_CAST")
+            val labels = (params["labels"] as? Map<String, Any?>)?.entries
+                ?.filter { it.value is String }?.associate { it.key to it.value as String }
+                ?: emptyMap()
+            val strings = DocuPassStrings().withOverrides(labels)
             composeView.setContent {
-                DocuPassView(config = config, onResult = ::emit)
+                DocuPassView(config = config, strings = strings, theme = theme, onResult = ::emit)
             }
         }
     }
