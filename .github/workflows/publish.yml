@@ -25,6 +25,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # setup-dart wires the GitHub Actions OIDC token into pub's credentials
+      # (uses the job's `id-token: write`). WITHOUT this step the pub client has
+      # no OIDC token and `flutter pub publish` falls back to interactive Google
+      # OAuth, which hangs forever in CI. flutter-action then provides the
+      # Flutter SDK; `flutter pub publish` reads the OIDC creds setup-dart wrote.
+      - uses: dart-lang/setup-dart@v1
+
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
