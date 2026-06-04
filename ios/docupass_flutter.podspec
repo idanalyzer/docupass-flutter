@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'docupass_flutter'
-  s.version          = '0.1.0'
+  s.version          = '0.1.1'
   s.summary          = 'Native in-app ID verification & KYC for Flutter (ID Analyzer DocuPass).'
   s.description      = 'Embeds the native iOS DocuPass SDK (AVFoundation + MediaPipe liveness) as a Flutter platform view. No WebView.'
   s.homepage         = 'https://github.com/idanalyzer/docupass-flutter'
