@@ -15,12 +15,12 @@ on:
   push:
     tags:
       - "v*"
-  workflow_dispatch:
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       id-token: write # required for pub.dev OIDC
     steps:
       - uses: actions/checkout@v4
@@ -38,6 +38,18 @@ jobs:
 
       - name: Install deps
         run: flutter pub get
+
+      - name: Verify tag matches pubspec version
+        run: |
+          VERSION="$(grep '^version:' pubspec.yaml | awk '{print $2}')"
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          if [ "$TAG_VERSION" != "$VERSION" ]; then
+            echo "Tag v$TAG_VERSION does not match pubspec.yaml version $VERSION"
+            exit 1
+          fi
+
+      - name: Validate package
+        run: flutter pub publish --dry-run
 
       - name: Publish
         run: flutter pub publish --force
